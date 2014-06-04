@@ -4,8 +4,8 @@ module Spree
     belongs_to :country
     belongs_to :state
 
-    acts_as_list
-    scope :ordered, order("#{SelfDeliveryPoint.table_name}.position ASC")
+    #acts_as_list
+    scope :ordered, -> { order("#{SelfDeliveryPoint.table_name}.position ASC") }
     
     validates :country, :city, :address1, :presence => true
     validate :state_or_state_name

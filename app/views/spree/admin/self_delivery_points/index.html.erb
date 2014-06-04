@@ -6,7 +6,7 @@
 
 <% content_for :page_actions do %>
   <li>
-    <%= button_link_to t(:new_self_delivery_point), new_object_url,  :icon => 'icon-plus', :id => 'admin_new_self_delivery_point_link' %>
+    <%= button_link_to t(:new_self_delivery_point), new_admin_self_delivery_point_path,  :icon => 'icon-plus', :id => 'admin_new_self_delivery_point_link' %>
   </li>
 <% end %>
 
@@ -18,7 +18,7 @@
   </colgroup>
   <tbody>
     <% @self_delivery_points.each do |point|%>
-      <tr id="<%= spree_dom_id point %>" data-hook="admin_self_delivery_points_index_rows">
+      <tr id="<%= spree_dom_id point %>" data-hook="admin_self_delivery_points_index_rows" class="<%= cycle('odd', 'even')%>">
         <td class="no-border">
             <span class="handle"></span>
           </td>

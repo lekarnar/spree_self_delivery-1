@@ -20,3 +20,4 @@ ru:
   self_delivery_shipping_method_exists: "Допустим только один способ доставки \"Самовывоз\""
   self_delivery_points_settings_description: Управление пунктами самовывоза
   self_delivery_point_free: бесплатно
+  back_to_shipping_methods_list: Вернуться к списку пунктов самовывоза

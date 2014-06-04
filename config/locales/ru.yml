@@ -1,9 +1,9 @@
 ru:
   activerecord:
     models:
-      self_delivery_point: Пункт самовывоза
+      spree/self_delivery_point: Пункт самовывоза
     attributes:
-      self_delivery_point: 
+      spree/self_delivery_point: 
         country: Страна
         state: Регион
         city: Город

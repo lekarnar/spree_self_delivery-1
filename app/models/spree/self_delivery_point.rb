@@ -10,7 +10,7 @@ module Spree
     validates :country, :city, :address1, :presence => true
     validate :state_or_state_name
 
-    attr_accessible :country_id, :show_country, :state_id, :state_name, :show_state, :city, :address1, :hours, :description, :cost
+    #attr_accessible :country_id, :show_country, :state_id, :state_name, :show_state, :city, :address1, :hours, :description, :cost
 
     def full_address
       addr = []
@@ -29,7 +29,6 @@ module Spree
         errors.add(:state, :invalid) if state.blank? || state.country_id != country.id
       else
         self.state_id = nil
-        errors.add(:state, :invalid) if state_name.blank?
       end
     end
   end

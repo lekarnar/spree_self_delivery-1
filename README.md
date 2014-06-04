@@ -16,4 +16,11 @@ Installation
 
 ##### Note
 
+``` 
+  rails console
+  Spree::Config[:address_requires_state] = false
+  
+  initializers/self_delivery.rb:
+  Spree::PermittedAttributes.checkout_attributes << :self_delivery_point_id
+```
 If you are using spree_address_book gem it should be specified before spree_self_delivery in Gemfile

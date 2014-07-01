@@ -2,10 +2,10 @@
 Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.name        = 'spree_self_delivery'
-  s.version     = '2.1.0'
+  s.version     = '2.2.2'
   s.summary     = ''
   s.description = ''
-  s.required_ruby_version = '>= 1.8.7'
+  s.required_ruby_version = '>= 1.9.3'
 
   s.author            = 'Babur Usenakunov'
   s.email             = 'bob.usenakunov@gmail.com'
@@ -16,7 +16,9 @@ Gem::Specification.new do |s|
   s.require_path = 'lib'
   s.requirements << 'none'
 
-  s.add_dependency 'spree_core', '~> 2.1.0'
+  spree_version = '~> 2.2.2'
+  s.add_dependency 'spree_core', spree_version
+  s.add_dependency 'spree_frontend', spree_version
 
   s.add_development_dependency 'capybara'
   s.add_development_dependency 'coffee-rails'

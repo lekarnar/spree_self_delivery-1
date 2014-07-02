@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row self-delivery-country">
   <div class="five columns">
     <%= f.field_container :country do %>
       <%= f.label :country %> <span class="required">*</span><br />
@@ -15,10 +15,10 @@
   </div>
 </div>
 
-<div class="row">
+<div class="row self-delivery-state">
   <div class="five columns">
     <%= f.field_container :state do %>
-      <%= f.label :state %> <span class="required">*</span><br />
+      <%= f.label :state %><br />
       <%= f.hidden_field :state_id, :value => '', :id => '' %>
       <%= f.collection_select :state_id, f.object.country ? f.object.country.states.order(:name) : [], :id, :name, {:include_blank => true}, {:disabled => f.object.country.blank? || !f.object.country.states.exists?} %>
       <%= t :or %><br /><br />
@@ -31,6 +31,16 @@
     <%= f.field_container :show_state do %>
       <%= f.label :show_state %> <br />
       <%= f.check_box :show_state %>
+    <% end %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="seven columns">
+    <%= f.field_container :company do %>
+      <%= f.label :company %> <span class="required">*</span><br />
+      <%= f.text_field :company, :class => 'fullwidth' %>
+      <%= error_message_on :self_delivery_point, :company %>
     <% end %>
   </div>
 </div>
@@ -51,6 +61,16 @@
       <%= f.label :address1 %> <span class="required">*</span><br />
       <%= f.text_field :address1, :class => 'fullwidth' %>
       <%= error_message_on :self_delivery_point, :address1 %>
+    <% end %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="seven columns">
+    <%= f.field_container :phone do %>
+      <%= f.label :phone %> <span class="required">*</span><br />
+      <%= f.text_field :phone, :class => 'fullwidth' %>
+      <%= error_message_on :self_delivery_point, :phone %>
     <% end %>
   </div>
 </div>

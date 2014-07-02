@@ -50,15 +50,30 @@ Spree::Order.class_eval do
   def set_ship_address
     if @self_delivery_point_id
       write_attribute(:self_delivery_point_id, @self_delivery_point_id)
-      return if @self_delivery_point_id.to_i < 1 || !ship_address
+      return if @self_delivery_point_id.to_i < 1 && !ship_address
       if sdp = Spree::SelfDeliveryPoint.find_by_id(@self_delivery_point_id)
-        [:country, :state, :state_name, :city, :address1].each do |a|
-          ship_address.send("#{a}=", sdp.send(a))
-          bill_address.send("#{a}=", sdp.send(a))
+        new_address = Spree::Address.new
+        new_address.user = user if user
+        [:country, :company, :phone, :state, :state_name, :city, :address1].each do |a|
+          new_address.send("#{a}=", sdp.send(a))
         end
-        ship_address.zipcode = '-'
-        bill_address.zipcode = '-'
+        new_address.zipcode = '-'
+        new_address.first_name = sdp.company
+        new_address.last_name = sdp.company
+        new_address.save!
+        self.ship_address_id = new_address.id
         self.shipping_method_id = Spree::ShippingMethod.self_delivery.id
+
+        shipment = shipments.last
+        shipment.shipping_methods = [Spree::ShippingMethod.self_delivery]
+        shipping_rate = Spree::ShippingRate.where(
+          shipping_method:  Spree::ShippingMethod.self_delivery, 
+          shipment: shipment
+        ).first_or_create
+        if sdp.cost
+          shipping_rate.cost = sdp.cost
+          shipping_rate.save
+        end
       end
     end 
   end

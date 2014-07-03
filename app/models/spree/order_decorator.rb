@@ -45,8 +45,7 @@ Spree::Order.class_eval do
 
 
   private
-  
-
+ 
   def set_ship_address
     if @self_delivery_point_id
       write_attribute(:self_delivery_point_id, @self_delivery_point_id)
@@ -54,14 +53,12 @@ Spree::Order.class_eval do
       if sdp = Spree::SelfDeliveryPoint.find_by_id(@self_delivery_point_id)
         [:country, :state, :state_name, :city, :address1].each do |a|
           ship_address.send("#{a}=", sdp.send(a))
-          bill_address.send("#{a}=", sdp.send(a))
         end
         ship_address.zipcode = '-'
-        bill_address.zipcode = '-'
         self.shipping_method_id = Spree::ShippingMethod.self_delivery.id
       end
     end 
-  end
+  end 
 
   define_method :has_available_shipment do
     if self_delivery?

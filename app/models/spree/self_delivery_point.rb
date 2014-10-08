@@ -20,6 +20,10 @@ module Spree
       addr.compact.join(', ')
     end
 
+    def cost=(cost)
+      self[:cost] = parse_cost(cost)
+    end
+
     private
 
     def state_or_state_name
@@ -31,5 +35,17 @@ module Spree
         self.state_id = nil
       end
     end
+
+    def parse_cost(cost)
+      return cost unless cost.is_a?(String)
+
+      separator = I18n.t(:'number.currency.format.separator')
+      non_price_characters = /[^0-9\-#{separator}]/
+      cost.gsub!(non_price_characters, '') # strip everything else first
+      cost.gsub!(separator, '.') unless separator == '.' # then replace the locale-specific decimal separator with the standard separator if necessary
+
+      cost.to_d
+    end
+
   end
 end

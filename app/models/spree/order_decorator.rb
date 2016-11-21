@@ -3,6 +3,14 @@ Spree::Order.class_eval do
 
   #attr_accessible :self_delivery_point_id
 
+  define_method :has_available_shipment do
+    if self_delivery?
+      return
+    else
+      spree_has_available_shipment.bind(self).call
+    end
+  end
+
   spree_has_available_shipment = instance_method(:has_available_shipment)
 
   before_validation :set_ship_address
@@ -19,20 +27,23 @@ Spree::Order.class_eval do
       if order.self_delivery?
         order.state = order.payment_required? ? :payment : :complete
         order.save
-        order.state == :payment ? order.force_shippment_method_to_self_delivery : order.finalize! 
-        #order.finalize! 
+        order.state == :payment ? order.force_shippment_method_to_self_delivery : order.finalize!
+        #order.finalize!
       end
     end
   end
-  
+
   def self_delivery_point_id=(point_id)
     @self_delivery_point_id = point_id
   end
 
   def self_delivery?
-    false if shipping_method_id.nil?
-    shipping_method = Spree::ShippingMethod.find_by_id(shipping_method_id)
-    shipping_method && shipping_method.self_delivery?
+    if (defined? shipping_method_id).nil?
+      false
+    else
+      shipping_method = Spree::ShippingMethod.find_by_id(shipping_method_id)
+      shipping_method && shipping_method.self_delivery?
+    end
   end
 
   def force_shippment_method_to_self_delivery
@@ -45,7 +56,7 @@ Spree::Order.class_eval do
 
 
   private
- 
+
   def set_ship_address
     if @self_delivery_point_id
       write_attribute(:self_delivery_point_id, @self_delivery_point_id)
@@ -57,14 +68,7 @@ Spree::Order.class_eval do
         ship_address.zipcode = '-'
         self.shipping_method_id = Spree::ShippingMethod.self_delivery.id
       end
-    end 
-  end 
-
-  define_method :has_available_shipment do
-    if self_delivery?
-      return
-    else
-      spree_has_available_shipment.bind(self).call
     end
   end
+
 end

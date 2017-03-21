@@ -9,7 +9,7 @@ Spree::ShippingMethod.class_eval do
   def self_delivery?
     calculator[:type] == 'Spree::Calculator::Shipping::SelfDelivery'
   end
-  
+
   private
 
   def self_delivery_uniqueness

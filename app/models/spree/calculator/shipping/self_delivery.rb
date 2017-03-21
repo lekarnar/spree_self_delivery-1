@@ -5,10 +5,10 @@ module Spree
     class SelfDelivery < Spree::ShippingCalculator
 
       def self.description
-        I18n.t :self_delivery
+        Spree.t(:self_delivery)
       end
 
-      def compute(object)
+      def compute_package(object)
         object = object.order unless object.kind_of?(Spree::Order)
         object.self_delivery_point.try(:cost) || 0
       end

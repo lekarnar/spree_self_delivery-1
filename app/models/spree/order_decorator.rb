@@ -60,28 +60,49 @@ Spree::Order.class_eval do
 
   def set_ship_address
     if @self_delivery_point_id
+
       write_attribute(:self_delivery_point_id, @self_delivery_point_id)
       return if @self_delivery_point_id.to_i < 1 || !ship_address
 
-      if use_billing_self? && bill_address
-        [:firstname, :lastname, :phone].each do |a|
-          ship_address.send("#{a}=", bill_address.send(a))
-        end
-      end
+      if ship_address_id == bill_address_id
 
-      if sdp = Spree::SelfDeliveryPoint.find_by_id(@self_delivery_point_id)
-        [:country, :state, :state_name, :city, :address1].each do |a|
-          ship_address.send("#{a}=", sdp.send(a))
-        end
-        ship_address.zipcode = 1000
-        ship_address.firstname
-        shipments = self.create_proposed_shipments
-        shipments.each do |s|
-          self_shiping_rate = s.shipping_rates.find_by_shipping_method_id(Spree::ShippingMethod.self_delivery.id)
-          s.selected_shipping_rate_id = self_shiping_rate.id
-        end
+        new_ship_address = Spree::Address.new
+        set_ship_address_params(new_ship_address, true)
+
+      else
+
+        set_ship_address_params(ship_address, false)
+
       end
     end
+  end
+
+  def set_ship_address_params(ship_address_var, is_new_ship_addres)
+
+    if is_new_ship_addres || (use_billing_self? && bill_address)
+      [:firstname, :lastname, :phone].each do |a|
+        ship_address_var.send("#{a}=", bill_address.send(a))
+      end
+    end
+
+    if sdp = Spree::SelfDeliveryPoint.find_by_id(@self_delivery_point_id)
+      [:country, :state, :state_name, :city, :address1].each do |a|
+        ship_address_var.send("#{a}=", sdp.send(a))
+      end
+      ship_address_var.zipcode = 1000
+
+      if is_new_ship_addres
+        ship_address_var.save!
+        self.ship_address = ship_address_var
+      end
+
+      shipments = self.create_proposed_shipments
+      shipments.each do |s|
+        self_shiping_rate = s.shipping_rates.find_by_shipping_method_id(Spree::ShippingMethod.self_delivery.id)
+        s.selected_shipping_rate_id = self_shiping_rate.id
+      end
+    end
+
   end
 
 end

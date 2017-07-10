@@ -13,6 +13,8 @@ Spree::CheckoutController.class_eval do
       if shipping_method_id == 5
         @order.self_delivery_point_id = "1"
         @order.use_billing = false
+      else
+        @order.self_delivery_point_id = nil
       end
     end
   end

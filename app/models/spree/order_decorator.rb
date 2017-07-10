@@ -12,7 +12,7 @@ Spree::Order.class_eval do
 
   spree_has_available_shipment = instance_method(:has_available_shipment)
 
-  before_validation :set_ship_address, if: :self_delivery?
+  before_validation :set_ship_address
 
   state_machine do
     before_transition :to => :delivery do |order|
@@ -59,21 +59,25 @@ Spree::Order.class_eval do
   private
 
   def set_ship_address
-    if @self_delivery_point_id
+    if self_delivery?
+      if @self_delivery_point_id
 
-      write_attribute(:self_delivery_point_id, @self_delivery_point_id)
-      return if @self_delivery_point_id.to_i < 1 || !ship_address
+        write_attribute(:self_delivery_point_id, @self_delivery_point_id)
+        return if @self_delivery_point_id.to_i < 1 || !ship_address
 
-      if ship_address_id == bill_address_id
+        if ship_address_id == bill_address_id
 
-        new_ship_address = Spree::Address.new
-        set_ship_address_params(new_ship_address, true)
+          new_ship_address = Spree::Address.new
+          set_ship_address_params(new_ship_address, true)
 
-      else
+        else
 
-        set_ship_address_params(ship_address, false)
+          set_ship_address_params(ship_address, false)
 
+        end
       end
+    else
+      self.ship_address = bill_address
     end
   end
 

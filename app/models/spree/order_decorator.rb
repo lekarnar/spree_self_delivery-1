@@ -59,7 +59,6 @@ Spree::Order.class_eval do
   private
 
   def set_ship_address
-
     if self.state == "delivery" || self.state == "address"
       if self_delivery?
         if @self_delivery_point_id
@@ -68,18 +67,12 @@ Spree::Order.class_eval do
           return if @self_delivery_point_id.to_i < 1 || !ship_address
 
           if ship_address_id == bill_address_id
-
             new_ship_address = Spree::Address.new
             set_ship_address_params(new_ship_address, true)
-
           else
-
             set_ship_address_params(ship_address, false)
-
           end
         end
-      else
-        self.ship_address = bill_address
       end
     end
   end
